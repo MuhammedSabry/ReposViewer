@@ -5,8 +5,7 @@
     android:id="@+id/recyclerLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="8dp"
-    android:background="@color/offWhite">
+    android:layout_marginTop="8dp">
 
     <TextView
         android:id="@+id/userNameTextView"
@@ -20,7 +19,6 @@
         app:layout_constraintTop_toBottomOf="@+id/view1" />
 
     <ImageView
-        android:id="@+id/markImage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scaleType="fitCenter"
