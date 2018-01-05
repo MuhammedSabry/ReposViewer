@@ -72,8 +72,8 @@ public class NetworkUtility extends IntentService {
 
         Log.d("NetworkUtility", "setList method");
 
-        String name = "repo name not found", description = "No description", repoURL = "", userName = "Unkown author", ownerURL = "";
-        boolean flag = false;
+        String name, description, repoURL, userName, ownerURL;
+        boolean flag;
         ArrayList<GitModel> arrayList = new ArrayList<>(jsonArray.length());
 
         for (int i = 0; i < jsonArray.length(); i++) {
