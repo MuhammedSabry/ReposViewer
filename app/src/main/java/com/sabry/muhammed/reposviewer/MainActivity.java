@@ -24,6 +24,7 @@ import com.sabry.muhammed.reposviewer.adapter.Adapter;
 import com.sabry.muhammed.reposviewer.models.GitModel;
 import com.sabry.muhammed.reposviewer.utility.NetworkUtility;
 import com.sabry.muhammed.reposviewer.utility.ObjectSerializer;
+import com.sabry.muhammed.reposviewer.utility.SingleToast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,14 +32,11 @@ import java.util.ArrayList;
 public class MainActivity
         extends AppCompatActivity {
 
-    public static final String BROADCAST_ACTION =
-            "gitAction";
-    public static final String DATA_STATUS =
-            "STATUS";
-    public static final String GIT_API_URL =
-            "GitURL";
-    public static final String GIT_ARRAY_LIST =
-            "GIT Array List";
+    private final String LOG = "Main Activity";
+    public static final String BROADCAST_ACTION = "gitAction";
+    public static final String DATA_STATUS = "STATUS";
+    public static final String GIT_API_URL = "GitURL";
+    public static final String GIT_ARRAY_LIST = "GIT Array List";
     public final String SHARED_PREFS_FILE = "Repos_Viewer";
     private ArrayList<GitModel> gitModelArrayList;
 
@@ -61,18 +59,17 @@ public class MainActivity
         emptyView = findViewById(R.id.emptyTag);
         progressBar = findViewById(R.id.contentLoadingProgressBar);
         refreshLayout = findViewById(R.id.refresherLayout);
+        receiver = new DownloadStateReceiver();
 
         //loading cached data once activity starts
-        Log.d("Main Activity", "trying to read from cache");
+        Log.d(LOG, "trying to read from cache");
         if (readCachedFile()) {
             Page = gitModelArrayList.size() / 10;
-            Log.d("Main Activity", "read Successful!");
+            Log.d(LOG, "read Successful!");
         }
 
 
-        receiver = new DownloadStateReceiver();
-
-        //instantiate the arraylist if it's empty or no items
+        //instantiate the ArrayList if it's empty or no items
         if (gitModelArrayList == null || gitModelArrayList.size() == 0) {
             gitModelArrayList = new ArrayList<>(10);
             Page = 1;
@@ -89,9 +86,9 @@ public class MainActivity
         //checking internet connectivity
         if (isConnected())
             getRepos();
-        else
-            Toast.makeText(this, "No Network Connection!", Toast.LENGTH_LONG).show();
-
+        else {
+            SingleToast.show(MainActivity.this);
+        }
         //handling on swipe refresher event
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -99,8 +96,10 @@ public class MainActivity
                 if (isConnected()) {
                     Page = 1;
                     getRepos();
-                } else
+                } else {
                     refreshLayout.setRefreshing(false);
+                    SingleToast.show(MainActivity.this);
+                }
             }
         });
 
@@ -168,7 +167,7 @@ public class MainActivity
         // Called when the BroadcastReceiver gets an Intent it's registered to receive
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d("mainActivity", "broadcast OnRecieve");
+            Log.d(LOG, "broadcast OnReceive");
 
             progressBar.setVisibility(View.GONE);
             if (intent.getAction() == BROADCAST_ACTION) {
@@ -218,7 +217,7 @@ public class MainActivity
 
     }
 
-    //reading the data from the sharedpreference
+    //reading the data from the SharedPreference
     public boolean readCachedFile() {
         SharedPreferences prefs = getSharedPreferences(SHARED_PREFS_FILE, Context.MODE_PRIVATE);
 
