@@ -72,7 +72,7 @@ public class NetworkUtility extends IntentService {
 
         Log.d("NetworkUtility", "setList method");
 
-        String name = "",description= "",repoURL= "",userName= "",ownerURL= "";
+        String name = "repo name not found", description = "No description", repoURL = "", userName = "Unkown author", ownerURL = "";
         boolean flag = false;
         ArrayList<GitModel> arrayList = new ArrayList<>(jsonArray.length());
 
@@ -86,14 +86,14 @@ public class NetworkUtility extends IntentService {
                 repoURL = masterObject.getString("html_url");
 
                 JSONObject ownerObject = masterObject.getJSONObject("owner");
-                userName= ownerObject.getString("login");
+                userName = ownerObject.getString("login");
                 ownerURL = ownerObject.getString("html_url");
 
             } catch (JSONException e) {
                 arrayList.clear();
                 break;
             }
-            GitModel data = new GitModel(name,userName,description,repoURL,ownerURL,flag);
+            GitModel data = new GitModel(name, userName, description, repoURL, ownerURL, flag);
             arrayList.add(data);
         }
 
